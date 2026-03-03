@@ -298,8 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formAddStudent) {
         formAddStudent.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = formAddStudent.querySelector('button[type="submit"]');
-            btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Saving...";
+            const btn = document.querySelector('button[form="form-add-student"]');
+            if (btn) btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Saving...";
 
             const payload = {
                 name: document.getElementById('student-name-input').value,
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Failed to add student", error);
                 alert("Server Error. Make sure Flask back-end is running.");
             } finally {
-                btn.innerHTML = "Register Student";
+                if (btn) btn.innerHTML = "Register Student";
             }
         });
     }
