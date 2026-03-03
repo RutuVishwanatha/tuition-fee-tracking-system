@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Receipt - {{ student.name }}</title>
+    <!-- Use Inter font to match the main app -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .receipt-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #e5e7eb;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-header h1 {
+            margin: 0;
+            color: #4f46e5;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .receipt-header p {
+            margin: 5px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .receipt-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .detail-row span.label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .detail-row span.val {
+            font-weight: 600;
+            color: #111827;
+            text-align: right;
+        }
+
+        .receipt-totals {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 15px;
+            margin-bottom: 30px;
+        }
+
+        .receipt-totals .detail-row {
+            margin-bottom: 8px;
+        }
+
+        .receipt-totals .detail-row.total {
+            margin-top: 15px;
+        }
+
+        .receipt-totals .detail-row.total span {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .print-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #4338ca;
+        }
+
+        @media print {
+            body {
+                background: white;
+                height: auto;
+                padding: 0;
+                display: block;
+            }
+
+            .receipt-card {
+                box-shadow: none;
+                width: 100%;
+                max-width: 100%;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="receipt-card">
+        <div class="receipt-header">
+            <h1>Tuition Tracker</h1>
+            <p>Official Payment Receipt</p>
+        </div>
+
+        <div class="receipt-details">
+            <div class="detail-row">
+                <span class="label">Date:</span>
+                <span class="val" id="current-date"></span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Receipt ID:</span>
+                <span class="val">#TRX-{{ "%04d"|format(student.id) }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Student Name:</span>
+                <span class="val">{{ student.name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Course/Class:</span>
+                <span class="val">{{ student.subject }}</span>
+            </div>
+        </div>
+
+        <div class="receipt-totals">
+            <div class="detail-row">
+                <span class="label">Total Course Fee:</span>
+                <span class="val">₹{{ "%.2f"|format(student.total_fee) }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Amount Paid:</span>
+                <span class="val">₹{{ "%.2f"|format(student.paid_amount) }}</span>
+            </div>
+            <div class="detail-row total">
+                <span class="label">Balance Remaining:</span>
+                <span class="val">₹{{ "%.2f"|format(student.total_fee - student.paid_amount) }}</span>
+            </div>
+        </div>
+
+        <button class="print-btn" onclick="window.print()">Print Receipt</button>
+    </div>
+
+    <script>
+        // Set the current date dynamically on client side
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-IN', options);
+    </script>
+</body>
+
+</html>

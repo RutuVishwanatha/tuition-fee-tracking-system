@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuitionFee - Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="logo">
+                    <i class='bx bxs-graduation'></i>
+                    <span>TuitTrack</span>
+                </div>
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Enter your credentials to access your account.</p>
+
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <i class='bx bx-envelope'></i>
+                            <input type="email" id="email" placeholder="admin@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i class='bx bx-lock-alt'></i>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="login-actions">
+                        <label class="remember-me">
+                            <input type="checkbox">
+                            <span class="custom-checkbox"></span>
+                            Remember Me
+                        </label>
+                        <a href="#" id="show-forgot-password" class="text-link">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    <div id="login-message" class="message hidden"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Screen -->
+    <div id="forgot-password-screen" class="screen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="logo">
+                    <i class='bx bxs-graduation'></i>
+                    <span>TuitTrack</span>
+                </div>
+                <h2>Reset Password</h2>
+                <p class="subtitle">Enter your registered email to receive a reset link.</p>
+
+                <form id="forgot-password-form">
+                    <div class="input-group">
+                        <label for="reset-email">Email</label>
+                        <div class="input-wrapper">
+                            <i class='bx bx-envelope'></i>
+                            <input type="email" id="reset-email" placeholder="admin@example.com" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Send Reset Link</button>
+
+                    <div class="separator">or</div>
+
+                    <button type="button" id="back-to-login" class="btn btn-outline btn-block">Back to Login</button>
+
+                    <div id="reset-message" class="message hidden"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Layout -->
+    <div id="main-app" class="screen">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="nav-brand">
+                <i class='bx bxs-graduation'></i>
+                <span>TuitTrack</span>
+            </div>
+
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard"><i class='bx bx-grid-alt'></i> Dashboard</li>
+                <li data-target="classes"><i class='bx bx-book-bookmark'></i> Classes</li>
+                <li data-target="students"><i class='bx bx-user-pin'></i> Students</li>
+                <li data-target="payments"><i class='bx bx-money'></i> Payments</li>
+                <li data-target="reports"><i class='bx bx-bar-chart-alt-2'></i> Reports</li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="search-bar">
+                    <i class='bx bx-search'></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
+                    <i class='bx bx-moon'></i>
+                </button>
+                <div class="notification-bell">
+                    <i class='bx bx-bell'></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=4f46e5&color=fff" alt="Profile"
+                        class="avatar">
+                    <i class='bx bx-chevron-down'></i>
+
+                    <!-- Dropdown Menu -->
+                    <div class="dropdown-menu">
+                        <div class="dropdown-header">
+                            <strong>Admin User</strong>
+                            <p>admin@admin.com</p>
+                        </div>
+                        <ul class="dropdown-list">
+                            <li><i class='bx bx-user'></i> My Profile</li>
+                            <li><i class='bx bx-cog'></i> Settings</li>
+                            <li><i class='bx bx-support'></i> Support</li>
+                            <li class="dropdown-divider"></li>
+                            <li class="logout-action"><i class='bx bx-log-out'></i> Logout</li>
+                        </ul>
+                    </div>
+                </div>
+                <button id="logout-btn" class="btn btn-outline btn-sm"><i class='bx bx-log-out'></i> Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view active">
+                <div class="view-header">
+                    <div>
+                        <h1>Dashboard Overview</h1>
+                        <p>Welcome back, here is your summary for today.</p>
+                    </div>
+                </div>
+
+                <!-- Stat Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-blue"><i class='bx bx-group'></i></div>
+                        <div class="stat-info">
+                            <h3>Total Students</h3>
+                            <h2 id="stat-total-students">3</h2>
+                            <span class="trend up"><i class='bx bx-trending-up'></i> +1 this month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-green"><i class='bx bx-wallet'></i></div>
+                        <div class="stat-info">
+                            <h3>Collected Amount</h3>
+                            <h2 id="stat-collected">₹2,100</h2>
+                            <span class="trend up"><i class='bx bx-trending-up'></i> +8% this month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-yellow"><i class='bx bx-time'></i></div>
+                        <div class="stat-info">
+                            <h3>Pending Amount</h3>
+                            <h2 id="stat-pending">₹1,600</h2>
+                            <span class="trend down"><i class='bx bx-trending-down'></i> -3% this month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-red"><i class='bx bx-error-circle'></i></div>
+                        <div class="stat-info">
+                            <h3>High-Risk Students</h3>
+                            <h2 id="stat-high-risk">1</h2>
+                            <span class="trend down"><i class='bx bx-trending-down'></i> -1 this month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row">
+                    <!-- Chart Area -->
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Fee Collection Status</h3>
+                            <div class="card-actions"><i class='bx bx-dots-horizontal-rounded'></i></div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="mock-pie-chart">
+                                <div class="pie hole"></div>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item"><span class="dot collected"></span> Collected (78%)</div>
+                                <div class="legend-item"><span class="dot pending"></span> Pending (22%)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Income -->
+                    <div class="card income-card">
+                        <div class="card-header">
+                            <h3>Monthly Income</h3>
+                            <select class="clean-select">
+                                <option>This Year</option>
+                            </select>
+                        </div>
+                        <div class="income-display">
+                            <h1 id="stat-revenue">₹44,500.00</h1>
+                            <p>Total Revenue YTD</p>
+                            <!-- Mock Mini Bar Chart -->
+                            <div class="mini-bar-chart">
+                                <div class="bar" style="height: 40%"></div>
+                                <div class="bar" style="height: 60%"></div>
+                                <div class="bar" style="height: 50%"></div>
+                                <div class="bar" style="height: 80%"></div>
+                                <div class="bar" style="height: 70%"></div>
+                                <div class="bar" style="height: 90%"></div>
+                                <div class="bar active" style="height: 100%"></div>
+                            </div>
+                            <div class="months-labels">
+                                <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Payments -->
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h3>Recent Payments</h3>
+                        <button class="btn btn-outline btn-sm">View All</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="clean-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Student Name</th>
+                                    <th>Class</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#TRX-8492</td>
+                                    <td>Emma Watson</td>
+                                    <td>Mathematics 101</td>
+                                    <td>Today, 10:24 AM</td>
+                                    <td>₹1,200.00</td>
+                                    <td><span class="badge-status success">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#TRX-8491</td>
+                                    <td>Liam Johnson</td>
+                                    <td>Physics Adv</td>
+                                    <td>Today, 09:15 AM</td>
+                                    <td>₹800.00</td>
+                                    <td><span class="badge-status success">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#TRX-8490</td>
+                                    <td>Noah Williams</td>
+                                    <td>Chemistry 101</td>
+                                    <td>Yesterday</td>
+                                    <td>₹100.00</td>
+                                    <td><span class="badge-status success">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Classes View -->
+            <section id="classes" class="view">
+                <div class="view-header">
+                    <div>
+                        <h1>Classes Management</h1>
+                        <p>Manage all active classes and schedules.</p>
+                    </div>
+                    <div class="header-actions">
+                        <div class="search-bar">
+                            <i class='bx bx-search'></i>
+                            <input type="text" placeholder="Search classes...">
+                        </div>
+                        <button id="add-class-btn" class="btn btn-primary"><i class='bx bx-plus'></i> Add Class</button>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-responsive">
+                        <table class="clean-table grid-lines">
+                            <thead>
+                                <tr>
+                                    <th>Class Name</th>
+                                    <th>Subject</th>
+                                    <th>Session Time</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Total Students</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="classes-table-body">
+                                <tr>
+                                    <td><strong>Math Beginners</strong></td>
+                                    <td>Mathematics</td>
+                                    <td>10:00 AM - 11:30 AM</td>
+                                    <td>01 Sep, 2026</td>
+                                    <td>15 Dec, 2026</td>
+                                    <td>1 / 30</td>
+                                    <td class="table-actions">
+                                        <button class="icon-btn action-edit" title="Edit"><i
+                                                class='bx bx-edit-alt'></i></button>
+                                        <button class="icon-btn danger action-delete" title="Delete"><i
+                                                class='bx bx-trash'></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Physics Advanced</strong></td>
+                                    <td>Physics</td>
+                                    <td>02:00 PM - 04:00 PM</td>
+                                    <td>05 Sep, 2026</td>
+                                    <td>20 Dec, 2026</td>
+                                    <td>1 / 20</td>
+                                    <td class="table-actions">
+                                        <button class="icon-btn action-edit" title="Edit"><i
+                                                class='bx bx-edit-alt'></i></button>
+                                        <button class="icon-btn danger action-delete" title="Delete"><i
+                                                class='bx bx-trash'></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Chemistry 101</strong></td>
+                                    <td>Chemistry</td>
+                                    <td>09:00 AM - 10:30 AM</td>
+                                    <td>02 Sep, 2026</td>
+                                    <td>18 Dec, 2026</td>
+                                    <td>1 / 30</td>
+                                    <td class="table-actions">
+                                        <button class="icon-btn action-edit" title="Edit"><i
+                                                class='bx bx-edit-alt'></i></button>
+                                        <button class="icon-btn danger action-delete" title="Delete"><i
+                                                class='bx bx-trash'></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Students View -->
+            <section id="students" class="view">
+                <div class="view-header">
+                    <div>
+                        <h1>Students & Fees</h1>
+                        <p>Track student payments and monitor balances.</p>
+                    </div>
+                    <div class="header-actions">
+                        <div class="filters">
+                            <select id="filter-student-subject" class="clean-select">
+                                <option value="All Classes">All Classes</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                            </select>
+                            <select id="filter-student-status" class="clean-select">
+                                <option value="All Status">All Status</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                                <option value="High Risk">High Risk</option>
+                            </select>
+                            <button class="btn btn-outline"><i class='bx bx-export'></i> Export</button>
+                        </div>
+                        <button id="add-student-btn" class="btn btn-primary"><i class='bx bx-user-plus'></i> Add
+                            Student</button>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-responsive">
+                        <table class="clean-table grid-lines">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Total Fee</th>
+                                    <th>Amount Paid</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body">
+                                <!-- Data populated dynamically via Python Flask API -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other Views -->
+            <section id="payments" class="view">
+                <div class="view-header">
+                    <div>
+                        <h1>Payment Ledger</h1>
+                        <p>Track all incoming transactions and invoices.</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline"><i class='bx bx-export'></i> Export</button>
+                        <button class="btn btn-primary"><i class='bx bx-plus'></i> New Invoice</button>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-header"
+                        style="padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; gap: 15px;">
+                        <select class="clean-select" id="filter-payment-method">
+                            <option>All Methods</option>
+                            <option>Credit Card</option>
+                            <option>Bank Transfer</option>
+                            <option>Cash</option>
+                        </select>
+                        <select class="clean-select" id="filter-payment-status">
+                            <option>All Status</option>
+                            <option>Completed</option>
+                            <option>Processing</option>
+                            <option>Failed</option>
+                        </select>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="clean-table grid-lines">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Date</th>
+                                    <th>Student Name</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payments-table-body">
+                                <tr>
+                                    <td><strong>#TRX-9082</strong></td>
+                                    <td>Oct 24, 2023</td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="avatar-text bg-primary">EW</div>
+                                            <strong>Emma Watson</strong>
+                                        </div>
+                                    </td>
+                                    <td>Credit Card</td>
+                                    <td><strong>₹1,200.00</strong></td>
+                                    <td><span class="badge-status success">Completed</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-light"><i class='bx bxs-file-pdf'></i>
+                                            Receipt</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#TRX-9083</strong></td>
+                                    <td>Oct 25, 2023</td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="avatar-text bg-warning">LJ</div>
+                                            <strong>Liam Johnson</strong>
+                                        </div>
+                                    </td>
+                                    <td>Bank Transfer</td>
+                                    <td><strong>₹800.00</strong></td>
+                                    <td><span class="badge-status warning">Processing</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-light" disabled><i class='bx bxs-file-pdf'></i>
+                                            Receipt</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#TRX-9084</strong></td>
+                                    <td>Oct 26, 2023</td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="avatar-text bg-danger">NW</div>
+                                            <strong>Noah Williams</strong>
+                                        </div>
+                                    </td>
+                                    <td>Credit Card</td>
+                                    <td><strong>₹100.00</strong></td>
+                                    <td><span class="badge-status danger">Failed</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-light"><i class='bx bx-refresh'></i>
+                                            Retry</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="reports" class="view">
+                <div class="view-header">
+                    <div>
+                        <h1>Analytics & Reports</h1>
+                        <p>Visualize your financial performance and student metrics.</p>
+                    </div>
+                    <div class="header-actions">
+                        <select class="clean-select">
+                            <option>Last 30 Days</option>
+                            <option>This Quarter</option>
+                            <option>This Year</option>
+                        </select>
+                        <button class="btn btn-primary"><i class='bx bxs-file-pdf'></i> Export PDF</button>
+                    </div>
+                </div>
+
+                <!-- Reports Stat Cards -->
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-green"><i class='bx bx-trending-up'></i></div>
+                        <div class="stat-info">
+                            <h3>Revenue This Month</h3>
+                            <h2>₹12,450.00</h2>
+                            <span class="trend up"><i class='bx bx-trending-up'></i> +15% vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-red"><i class='bx bx-trending-down'></i></div>
+                        <div class="stat-info">
+                            <h3>Total Outstanding Debt</h3>
+                            <h2>₹4,200.00</h2>
+                            <span class="trend down"><i class='bx bx-error-circle'></i> Requires Follow-up</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-blue"><i class='bx bx-pie-chart-alt-2'></i></div>
+                        <div class="stat-info">
+                            <h3>Profit Margins (Est.)</h3>
+                            <h2>68%</h2>
+                            <span class="trend up"><i class='bx bx-trending-up'></i> +2% vs last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row" style="margin-top: 25px;">
+                    <!-- Chart 1 Placeholder -->
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Revenue Over Time</h3>
+                            <div class="card-actions"><i class='bx bx-dots-horizontal-rounded'></i></div>
+                        </div>
+                        <div class="chart-container"
+                            style="height: 250px; display: flex; align-items: flex-end; gap: 10%; padding: 20px 0; border-bottom: 1px solid var(--border-color);">
+                            <!-- Pure CSS mock bar chart -->
+                            <div
+                                style="width: 100%; height: 30%; background: var(--primary-light); border-top-left-radius: 4px; border-top-right-radius: 4px; position:relative;">
+                                <span
+                                    style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--text-secondary);">W1</span>
+                            </div>
+                            <div
+                                style="width: 100%; height: 50%; background: var(--primary-light); border-top-left-radius: 4px; border-top-right-radius: 4px; position:relative;">
+                                <span
+                                    style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--text-secondary);">W2</span>
+                            </div>
+                            <div
+                                style="width: 100%; height: 80%; background: var(--primary-color); border-top-left-radius: 4px; border-top-right-radius: 4px; position:relative;">
+                                <span
+                                    style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: var(--text-primary);">W3</span>
+                            </div>
+                            <div
+                                style="width: 100%; height: 60%; background: var(--primary-light); border-top-left-radius: 4px; border-top-right-radius: 4px; position:relative;">
+                                <span
+                                    style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--text-secondary);">W4</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2 Placeholder -->
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Subject Demographics</h3>
+                            <div class="card-actions"><i class='bx bx-dots-horizontal-rounded'></i></div>
+                        </div>
+                        <div class="chart-container"
+                            style="display: flex; justify-content: center; align-items: center; padding: 20px;">
+                            <!-- Mock Donut Chart -->
+                            <div
+                                style="width: 180px; height: 180px; border-radius: 50%; background: conic-gradient(var(--primary-color) 0% 45%, var(--warning-color) 45% 75%, var(--danger-color) 75% 100%); position: relative; display: flex; justify-content: center; align-items: center;">
+                                <div
+                                    style="width: 110px; height: 110px; border-radius: 50%; background: var(--card-bg); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                    <strong style="font-size: 24px;">85</strong>
+                                    <span style="font-size: 12px; color: var(--text-secondary);">Students</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around; padding-top: 15px; font-size: 13px;">
+                            <div><span
+                                    style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--primary-color); margin-right:5px;"></span>Math
+                            </div>
+                            <div><span
+                                    style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--warning-color); margin-right:5px;"></span>Physics
+                            </div>
+                            <div><span
+                                    style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--danger-color); margin-right:5px;"></span>Chem
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Class Modal -->
+    <div id="modal-add-class" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Class</h2>
+                <button class="close-modal"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-add-class">
+                    <div class="input-group">
+                        <label>Class Name</label>
+                        <input type="text" id="class-name-input" class="clean-input" style="width: 100%;"
+                            placeholder="e.g. Mathematics 101" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Subject</label>
+                        <select id="class-subject-input" class="clean-input" style="width: 100%;">
+                            <option>Mathematics</option>
+                            <option>Physics</option>
+                            <option>Chemistry</option>
+                            <option>Biology</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Start Date</label>
+                            <input type="date" id="class-start-input" class="clean-input custom-date"
+                                style="width: 100%;" required>
+                        </div>
+                        <div class="input-group">
+                            <label>End Date</label>
+                            <input type="date" id="class-end-input" class="clean-input custom-date" style="width: 100%;"
+                                required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Session Time</label>
+                        <input type="time" id="class-time-input" class="clean-input" style="width: 100%;" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal-btn">Cancel</button>
+                <button form="form-add-class" type="submit" class="btn btn-primary">Save Class</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div id="modal-add-student" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Student & Payment</h2>
+                <button class="close-modal"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-add-student">
+                    <div class="input-group">
+                        <label>Student Name</label>
+                        <input type="text" id="student-name-input" class="clean-input" style="width: 100%;"
+                            placeholder="Full Name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" id="student-email-input" class="clean-input" style="width: 100%;"
+                                placeholder="Email Address" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Class</label>
+                            <select id="student-class-input" class="clean-input" style="width: 100%;">
+                                <option>Math Beginners</option>
+                                <option>Physics Advanced</option>
+                                <option>Chemistry 101</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">Payment Details</div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Total Fee (₹)</label>
+                            <input type="number" id="calc-total" class="clean-input" style="width: 100%;" value="1200"
+                                required>
+                        </div>
+                        <div class="input-group">
+                            <label>Amount Paid (₹)</label>
+                            <input type="number" id="calc-paid" class="clean-input" style="width: 100%;" value="0"
+                                required>
+                        </div>
+                    </div>
+                    <div class="balance-calc">
+                        <span>Calculated Balance:</span>
+                        <strong id="calc-balance">₹1,200.00</strong>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal-btn">Cancel</button>
+                <button form="form-add-student" type="submit" class="btn btn-primary">Register Student</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic Hooked to Python API -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>
