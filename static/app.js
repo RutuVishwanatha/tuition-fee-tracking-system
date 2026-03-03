@@ -255,12 +255,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnAddClass = document.getElementById('add-class-btn');
     const btnAddStudent = document.getElementById('add-student-btn');
+    const btnAddInvoice = document.getElementById('add-invoice-btn');
 
     const closeBtns = document.querySelectorAll('.close-modal, .close-modal-btn');
 
     // Open Modals
     if (btnAddClass) btnAddClass.addEventListener('click', () => modalAddClass.classList.add('active'));
     if (btnAddStudent) btnAddStudent.addEventListener('click', () => modalAddStudent.classList.add('active'));
+    if (btnAddInvoice) btnAddInvoice.addEventListener('click', () => modalAddStudent.classList.add('active'));
 
     // Close Modals
     closeBtns.forEach(btn => {
