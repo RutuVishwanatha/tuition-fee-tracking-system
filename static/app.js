@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const tbody = document.getElementById('students-table-body');
             tbody.innerHTML = ''; // Clear table
 
+            const paymentsTbody = document.getElementById('payments-table-body');
+            if (paymentsTbody) paymentsTbody.innerHTML = '';
+
             students.forEach(student => {
                 const balance = student.total_fee - student.paid_amount;
                 let statusHtml = '';
@@ -73,6 +76,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     </td>
                 `;
                 tbody.appendChild(tr);
+
+                if (paymentsTbody && student.paid_amount > 0) {
+                    const ptr = document.createElement('tr');
+                    ptr.dataset.id = student.id;
+                    const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    ptr.innerHTML = `
+                        <td><strong>#TRX-${9000 + student.id}</strong></td>
+                        <td>${dateStr}</td>
+                        <td>
+                            <div class="user-cell" style="display:flex; align-items:center;">
+                                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=e0e7ff&color=4f46e5" alt="${student.name}" style="border-radius:50%; width:32px; height:32px; margin-right:8px;">
+                                <strong>${student.name}</strong>
+                            </div>
+                        </td>
+                        <td>Credit Card</td>
+                        <td><strong>₹${student.paid_amount.toFixed(2)}</strong></td>
+                        <td><span class="badge-status success">Completed</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-light action-receipt"><i class='bx bxs-file-pdf'></i> Receipt</button>
+                        </td>
+                    `;
+                    paymentsTbody.appendChild(ptr);
+                }
             });
             updateDashboardStats();
         } catch (error) {
